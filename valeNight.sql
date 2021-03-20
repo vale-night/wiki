@@ -21,7 +21,7 @@ USE `mydb` ;
 -- Table `mydb`.`Organizador`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Organizador` (
-  `idOrganizador` TEXT NOT NULL,
+  `idOrganizador` VARCHAR(64) NOT NULL,
   `email` VARCHAR(45) NULL,
   `senha` TEXT NULL,
   `razaoSocial` VARCHAR(45) NULL,
@@ -35,7 +35,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Cliente`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Cliente` (
-  `idCliente` TEXT NOT NULL,
+  `idCliente` VARCHAR(64) NOT NULL,
   `email` VARCHAR(45) NULL,
   `senha` TEXT NULL,
   `cpf` VARCHAR(45) NULL,
@@ -48,7 +48,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Endereco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Endereco` (
-  `idEndereco` TEXT NOT NULL,
+  `idEndereco` VARCHAR(64) NOT NULL,
   `rua` VARCHAR(45) NULL,
   `numero` VARCHAR(45) NULL,
   `bairro` VARCHAR(45) NULL,
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Endereco` (
   `complemento` VARCHAR(45) NULL,
   `latitude` VARCHAR(45) NULL,
   `longitude` VARCHAR(45) NULL,
-  `Organizador_idOrganizador` TEXT NULL,
-  `Cliente_idCliente` TEXT NULL,
+  `Organizador_idOrganizador` VARCHAR(64) NULL,
+  `Cliente_idCliente` VARCHAR(64) NULL,
   `tipo` ENUM("COMERCIAL", "COBRANCA") NULL,
   PRIMARY KEY (`idEndereco`),
   INDEX `fk_Endereco_Organizador_idx` (`Organizador_idOrganizador` ASC) VISIBLE,
@@ -80,12 +80,12 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Evento`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Evento` (
-  `idEvento` TEXT NOT NULL,
+  `idEvento` VARCHAR(64) NOT NULL,
   `nome` VARCHAR(45) NULL,
   `descricao` VARCHAR(45) NULL,
   `destaque` TINYINT(1) NULL,
   `faixaEtaria` VARCHAR(45) NULL,
-  `Endereco_idEndereco` TEXT NOT NULL,
+  `Endereco_idEndereco` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`idEvento`, `Endereco_idEndereco`),
   INDEX `fk_Evento_Endereco1_idx` (`Endereco_idEndereco` ASC) VISIBLE,
   CONSTRAINT `fk_Evento_Endereco1`
@@ -100,13 +100,13 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Arquivo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Arquivo` (
-  `idArquivo` TEXT NOT NULL,
+  `idArquivo` VARCHAR(64) NOT NULL,
   `dataUpload` DATE NULL,
   `caminhoArquivo` VARCHAR(45) NULL,
   `nome` VARCHAR(45) NULL,
-  `Organizador_idOrganizador` TEXT NULL,
-  `Cliente_idCliente` TEXT NULL,
-  `Evento_idEvento` TEXT NULL,
+  `Organizador_idOrganizador` VARCHAR(64) NOT NULL,
+  `Cliente_idCliente` VARCHAR(64) NOT NULL,
+  `Evento_idEvento` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`idArquivo`, `Evento_idEvento`),
   INDEX `fk_Arquivo_Organizador1_idx` (`Organizador_idOrganizador` ASC) VISIBLE,
   INDEX `fk_Arquivo_Cliente1_idx` (`Cliente_idCliente` ASC) VISIBLE,
@@ -143,13 +143,13 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Produto`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Produto` (
-  `idProduto` TEXT NOT NULL,
+  `idProduto` VARCHAR(64) NOT NULL,
   `nomeProduto` VARCHAR(45) NULL,
   `preco` DOUBLE NULL,
   `precoEspecial` DOUBLE NULL,
   `dataInicioPromocao` DATE NULL,
   `dataFimPromocao` DATE NULL,
-  `Evento_idEvento` TEXT NOT NULL,
+  `Evento_idEvento` VARCHAR(64) NOT NULL,
   `TipoDeProduto_idTipoDeProduto` INT NOT NULL,
   `SKU` VARCHAR(45) NULL,
   PRIMARY KEY (`idProduto`),
@@ -172,9 +172,9 @@ ENGINE = InnoDB;
 -- Table `mydb`.`CategoriaProduto`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`CategoriaProduto` (
-  `idCategoriaProduto` TEXT NOT NULL,
+  `idCategoriaProduto` VARCHAR(64) NOT NULL,
   `nome` VARCHAR(45) NULL,
-  `categoriaPai_idCategoria` TEXT NOT NULL,
+  `categoriaPai_idCategoria` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`idCategoriaProduto`),
   INDEX `fk_CategoriaProduto_CategoriaProduto1_idx` (`categoriaPai_idCategoria` ASC) VISIBLE,
   CONSTRAINT `fk_CategoriaProduto_CategoriaProduto1`
@@ -189,12 +189,12 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Pedido`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Pedido` (
-  `idPedido` TEXT NOT NULL,
+  `idPedido` VARCHAR(64) NOT NULL,
   `data` DATE NULL,
   `valorOriginal` FLOAT NULL,
   `valorEspecial` FLOAT NULL,
   `codigoRetirada` VARCHAR(45) NULL,
-  `Endereco_idEndereco` TEXT NOT NULL,
+  `Endereco_idEndereco` VARCHAR(64) NOT NULL,
   `status` ENUM("PENDENTE", "EM_ANDAMENTO", "CONCLUIDO") NULL,
   PRIMARY KEY (`idPedido`),
   INDEX `fk_Pedido_Endereco1_idx` (`Endereco_idEndereco` ASC) VISIBLE,
@@ -210,10 +210,10 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Carrinho`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Carrinho` (
-  `idCarrinho` TEXT NOT NULL,
+  `idCarrinho` VARCHAR(64) NOT NULL,
   `valorTotal` DOUBLE NULL,
   `Carrinhocol` VARCHAR(45) NULL,
-  `Pedido_idPedido` TEXT NOT NULL,
+  `Pedido_idPedido` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`idCarrinho`),
   INDEX `fk_Carrinho_Pedido1_idx` (`Pedido_idPedido` ASC) VISIBLE,
   CONSTRAINT `fk_Carrinho_Pedido1`
@@ -241,10 +241,10 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Pagamento`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Pagamento` (
-  `idPagamento` TEXT NOT NULL,
+  `idPagamento` VARCHAR(64) NOT NULL,
   `data` DATE NULL,
   `valor` FLOAT NULL,
-  `Pedido_idPedido` TEXT NOT NULL,
+  `Pedido_idPedido` VARCHAR(64) NOT NULL,
   `status` ENUM("PROCESSANDO", "PAGO", "CANCELADO") NULL,
   `hash` TEXT NULL,
   PRIMARY KEY (`idPagamento`),
@@ -261,8 +261,8 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Produto_has_CategoriaProduto`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Produto_has_CategoriaProduto` (
-  `Produto_idProduto` TEXT NOT NULL,
-  `CategoriaProduto_idCategoriaProduto` TEXT NOT NULL,
+  `Produto_idProduto` VARCHAR(64) NOT NULL,
+  `CategoriaProduto_idCategoriaProduto` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`Produto_idProduto`, `CategoriaProduto_idCategoriaProduto`),
   INDEX `fk_Produto_has_CategoriaProduto_CategoriaProduto1_idx` (`CategoriaProduto_idCategoriaProduto` ASC) VISIBLE,
   INDEX `fk_Produto_has_CategoriaProduto_Produto1_idx` (`Produto_idProduto` ASC) VISIBLE,
@@ -283,8 +283,8 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Produto_has_Carrinho`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Produto_has_Carrinho` (
-  `Produto_idProduto` TEXT NOT NULL,
-  `Carrinho_idCarrinho` TEXT NOT NULL,
+  `Produto_idProduto` VARCHAR(64) NOT NULL,
+  `Carrinho_idCarrinho` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`Produto_idProduto`, `Carrinho_idCarrinho`),
   INDEX `fk_Produto_has_Carrinho_Carrinho1_idx` (`Carrinho_idCarrinho` ASC) VISIBLE,
   INDEX `fk_Produto_has_Carrinho_Produto1_idx` (`Produto_idProduto` ASC) VISIBLE,
@@ -305,7 +305,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Carrinho_has_PromocaoCarrinho`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Carrinho_has_PromocaoCarrinho` (
-  `Carrinho_idCarrinho` TEXT NOT NULL,
+  `Carrinho_idCarrinho` VARCHAR(64) NOT NULL,
   `PromocaoCarrinho_idPromocaoCarrinho` INT NOT NULL,
   PRIMARY KEY (`Carrinho_idCarrinho`, `PromocaoCarrinho_idPromocaoCarrinho`),
   INDEX `fk_Carrinho_has_PromocaoCarrinho_PromocaoCarrinho1_idx` (`PromocaoCarrinho_idPromocaoCarrinho` ASC) VISIBLE,
@@ -372,7 +372,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Evento_has_OrientacaoSexual`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Evento_has_OrientacaoSexual` (
-  `Evento_idEvento` TEXT NOT NULL,
+  `Evento_idEvento` VARCHAR(64) NOT NULL,
   `OrientacaoSexual_idOrientacaoSexual` INT NOT NULL,
   PRIMARY KEY (`Evento_idEvento`, `OrientacaoSexual_idOrientacaoSexual`),
   INDEX `fk_Evento_has_OrientacaoSexual_OrientacaoSexual1_idx` (`OrientacaoSexual_idOrientacaoSexual` ASC) VISIBLE,
@@ -395,7 +395,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Preco_has_Evento` (
   `Preco_idPreco` INT NOT NULL,
-  `Evento_idEvento` TEXT NOT NULL,
+  `Evento_idEvento` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`Preco_idPreco`, `Evento_idEvento`),
   INDEX `fk_Preco_has_Evento_Evento1_idx` (`Evento_idEvento` ASC) VISIBLE,
   INDEX `fk_Preco_has_Evento_Preco1_idx` (`Preco_idPreco` ASC) VISIBLE,
@@ -417,7 +417,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`TipoDeEvento_has_Evento` (
   `TipoDeEvento_idTipoDeEvento` INT NOT NULL,
-  `Evento_idEvento` TEXT NOT NULL,
+  `Evento_idEvento` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`TipoDeEvento_idTipoDeEvento`, `Evento_idEvento`),
   INDEX `fk_TipoDeEvento_has_Evento_Evento1_idx` (`Evento_idEvento` ASC) VISIBLE,
   INDEX `fk_TipoDeEvento_has_Evento_TipoDeEvento1_idx` (`TipoDeEvento_idTipoDeEvento` ASC) VISIBLE,
@@ -439,7 +439,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`GeneroMusical_has_Evento` (
   `GeneroMusical_idGeneroMusical` INT NOT NULL,
-  `Evento_idEvento` TEXT NOT NULL,
+  `Evento_idEvento` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`GeneroMusical_idGeneroMusical`, `Evento_idEvento`),
   INDEX `fk_GeneroMusical_has_Evento_Evento1_idx` (`Evento_idEvento` ASC) VISIBLE,
   INDEX `fk_GeneroMusical_has_Evento_GeneroMusical1_idx` (`GeneroMusical_idGeneroMusical` ASC) VISIBLE,
